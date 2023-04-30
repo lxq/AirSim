@@ -15,9 +15,9 @@ if "%VisualStudioVersion%" == "" (
 )
 if "%VisualStudioVersion%" lss "17.0" (
     echo(
-    echo Hello there! We just upgraded AirSim to Unreal Engine 4.24 and Visual Studio 2022.
+    echo Hello there! We just upgraded AirSim to Unreal Engine 4.27 and Visual Studio 2022.
     echo Here are few easy steps for upgrade so everything is new and shiny:
-    echo https://github.com/Microsoft/AirSim/blob/master/docs/unreal_upgrade.md
+    echo https://github.com/Microsoft/AirSim/blob/main/docs/unreal_upgrade.md
     goto :buildfailed_nomsg
 )
 
@@ -203,6 +203,13 @@ REM //---------- all our output goes to Unreal/Plugin folder ----------
 if NOT exist Unreal\Plugins\AirSim\Source\AirLib mkdir Unreal\Plugins\AirSim\Source\AirLib
 robocopy /MIR AirLib Unreal\Plugins\AirSim\Source\AirLib  /XD temp *. /njh /njs /ndl /np
 copy /y AirSim.props Unreal\Plugins\AirSim\Source\AirLib
+
+REM //---------- update all environments ----------
+FOR /D %%E IN (Unreal\Environments\*) DO (
+    cd %%E
+    call .\update_from_git.bat ..\..\..
+    cd ..\..\..
+)
 
 REM //---------- done building ----------
 exit /b 0
